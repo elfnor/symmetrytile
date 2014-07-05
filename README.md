@@ -5,7 +5,7 @@ one of the [17 plane symmetry groups ](http://en.wikipedia.org/wiki/Wallpaper_gr
 
 Basically it rotates and or flips copies of the cell, combines them to form a tile and then copies that tile to fill a new image.
 
-Some galleries of images produced with this plug-in can be found [here](http://elfnor.gihub.io/symmetrytilegallery).
+Some galleries of images produced with this plug-in can be found [here](http://elfnor.github.io/symmetrytilegallery).
 
 ##Installation##
 
@@ -25,7 +25,7 @@ Restart GIMP to activate the plugin.
 ##Usage##
 
 Select an area on an image using the rectangle select tool.
-Start the plug-in via `Filters>Render>Symmetry Tile
+Start the plug-in via Filters>Render>Symmetry Tile
 
 You should see the following dialog. 
 
@@ -109,7 +109,7 @@ As an example this initial cell.
 
 ![epg_cell.png](images/epg_cell.png)
 
-and the string `bdb+d+|pqp+q+` produces this pattern
+and `bdb+d+|pqp+q+` entered into the `bdpq string` entry, produces this pattern
 
 ![epg_bdbtdtlpqptqt.png](images/epg_bdbtdtlpqptqt.png)
 
