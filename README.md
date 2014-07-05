@@ -7,7 +7,7 @@ Basically it rotates and or flips copies of the cell, combines them to form a ti
 
 Some galleries of images produced with this plug-in can be found [here](http://elfnor.github.io/symmetrytilegallery).
 
-Mor information on the plug-in can be found on my blog [look think make](http://elfnor.github.io/lookthinkmake)
+Mor information on the plug-in can be found on my blog [look think make](http://elfnor.github.io/lookthinkmake/tag/symmetrytile.html)
 
 ##Installation##
 
