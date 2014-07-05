@@ -5,18 +5,22 @@ one of the [17 plane symmetry groups ](http://en.wikipedia.org/wiki/Wallpaper_gr
 
 Basically it rotates and or flips copies of the cell, combines them to form a tile and then copies that tile to fill a new image.
 
-Some galleries of images produced with this plug-in can be found here.
+Some galleries of images produced with this plug-in can be found [here](http://elfnor.gihub.io/symmetrytilegallery).
 
 ##Installation##
+
+Requires [GIMP](http://www.gimp.org/) to be installed.
 
 From within GIMP find out where your plug-in directory is:
 
 Edit>Preferences>Folders>Plug-ins
 
-For Linux the plug-in directory  will be `~\.gimp-2.8\plugins`
+For Linux the plug-in directory will probably be `~/.gimp-2.8/plugins`
 Copy the file `symmetry_tile.py` to this folder and make it "executable". To do this: select the plug-in from your file browser, click properties and check the box "Allow executable" under the permissions tab.
 
-For Windows the plug-in directory will be 
+For Windows the plug-in directory will be probably be `C:\Users\username\gimp-2.8\plug-ins`. Copy the file `symmetry_tile.py` to this folder.
+
+Restart GIMP to activate the plugin.
 
 ##Usage##
 
@@ -118,3 +122,5 @@ for img in gimp.image_list():
    new_name = "/tmp/" + img.name[:-4] + ".png"
    pdb.gimp_file_save(img, img.layers[0], new_name, new_name)
 ```
+
+There ought to be a plug-in for saving all the images...
