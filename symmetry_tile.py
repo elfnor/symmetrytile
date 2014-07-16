@@ -51,7 +51,7 @@ rect_strs =[('p1', 'b', False),
             ('p4g', 'bb+p+d|q+qpd+|p+dbb+|pd+q+q', True),
             ('p4g', 'bq+d+d|pp+b+q|d+dbq+|b+qpp+', True)]
             
-rect_single_index = [0,1,4,6,8,12,16,19,25,26,28]
+rect_single_index = [0,1,4,6,8,12,16,19,23,26,28]
 rect_strs_single = [rect_strs[i] for i in rect_single_index]    
 rect_cells = [rect_strs[i][0] for  i in rect_single_index]        
 
@@ -64,7 +64,7 @@ def symmetry_tile(old, drawable, width, height, sym_type, multiple, bdpq_str):
         pdb.gimp_message("FATAL: Missing selection in old image!")
         
     coords =  (old_x1, old_y1, old_x2, old_y2 )       
-    if sym_types_list[sym_type] in rect_cells:
+    if sym_types_list[sym_type] in rect_cells:       
         if multiple:
             sym_list = [row for row in rect_strs if row[0] == sym_types_list[sym_type]]
             for sym_name, sym_str, square in sym_list:
@@ -110,7 +110,7 @@ def clean_up(img):
 
 def all_groups(old, drawable, width, height, multiple, coords):
     """
-    Makes 17 (or 40 if multple set)  new images using the same left edge of the 	  rectangular selection
+    Makes 17 (or 40 if multple set)  new images using the same left edge of the rectangular selection
     
     """
     if multiple:
@@ -176,7 +176,8 @@ def copy_primary_cell(old, drawable, width, height, cell_width, cell_height):
     pdb.gimp_edit_paste(layer, 1)
     #pdb.gimp_floating_sel_anchor(pdb.gimp_image_get_floating_sel(img))
     cell = img.merge_visible_layers(1)	
-    cell.visible = False	
+    cell.visible = False
+    cell.name = 'cell'
     return cell, img
 
 def get_rect_primary_cell(old_img, coords, square=False):
@@ -209,6 +210,7 @@ def copy_tile(tile, img, x0, x1):
     # do a loop from -1*x1 to ny*x1 
     # for hexagonal tiles need to add an extra half tile per row, do it for all. 
     tile.visible = False
+    tile.name = 'tile'
     nx = int(img.width/x0[0]) + 2
     ny = int(img.height/x1[1]) + 2
     for j in range(-1, ny):
@@ -219,9 +221,10 @@ def copy_tile(tile, img, x0, x1):
             
             xshft = i*x0[0] + j*x1[0]
             yshft = i*x0[1] + j*x1[1]
-            pdb.gimp_layer_translate(this_layer, xshft, yshft)
+            pdb.gimp_layer_translate(this_layer, round(xshft), round(yshft))
             
-    img.merge_visible_layers(1)
+    pattern = img.merge_visible_layers(1)
+    pattern.name = 'pattern'
     clean_up(img)	
     gimp.Display(img)
 
@@ -527,17 +530,15 @@ def get_kite_primary_cell(old_img, coords):
 
     return new_cell_width, new_cell_height
 
-
-
-
 def p3m1(old_img, drawable, width, height, coords):
     """
     The primary cell of p3m1 is an equilateral triangle.
     """
     cell_width, cell_height = get_tri_60_60_60_primary_cell(old_img, coords)
-    cell_1, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
-    
+    cell, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell_1 = cell.copy(0) 
     cell_1.visible = True
+    img.add_layer(cell_1,0)
     pdb.gimp_layer_translate(cell_1, 0, cell_height/2)
     
     cell_2 = cell_1.copy(0)
@@ -567,8 +568,10 @@ def p3(old_img, drawable, width, height, coords):
     The primary cell of p3 is a 30 60 diamond.
     """     
     cell_width, cell_height = get_diamond_primary_cell(old_img, coords)
-    cell_1, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell_1 = cell.copy(0) 
     cell_1.visible = True
+    img.add_layer(cell_1,0)
     pdb.gimp_layer_translate(cell_1, 0, round(cell_height/3))
 
     cell_2 = cell_1.copy(0)
@@ -594,8 +597,10 @@ def p4m(old_img, drawable, width, height, coords):
     The primary cell of p4m is a  90 45 45 triangle.
     """
     cell_width, cell_height = get_tri_90_45_45_primary_cell(old_img, coords)
-    cell_1, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell_1 = cell.copy(0) 
     cell_1.visible = True
+    img.add_layer(cell_1,0)
     #make a copy and mirror it along long side of cell
     cell_2 = cell_1.copy(0)
     img.add_layer(cell_2,0)
@@ -634,8 +639,10 @@ def p6(old_img, drawable, width, height, coords, rot60=0):
     
     """
     cell_width, cell_height = get_tri_60_60_60_primary_cell(old_img, coords)
-    cell_1, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell_1 = cell.copy(0)     
     cell_1.visible = True
+    img.add_layer(cell_1,0)
     
     pdb.gimp_item_transform_rotate(cell_1, rot60*2.0*math.pi/3.0, 0, int(cell_height/(2.0*(3.0**0.5))) , int(cell_height/2.0) )    
     pdb.gimp_layer_translate(cell_1, 0, round(cell_height/2.0))
@@ -683,8 +690,10 @@ def p31m(old_img, drawable, width, height, coords):
     we'll do the kite
     """
     cell_width, cell_height = get_kite_primary_cell(old_img, coords)
-    cell_1, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell_1 = cell.copy(0) 
     cell_1.visible = True
+    img.add_layer(cell_1,0)
     pdb.gimp_item_transform_rotate(cell_1, -math.pi/2.0, 0 ,0, 0)
     cell_length = int(2.0*cell_height/(3**0.5))
     pdb.gimp_layer_translate(cell_1, 0, cell_length)
@@ -719,8 +728,10 @@ def p6m(old_img, drawable, width, height, coords):
     The primary cell of p6 is a triangle with 90, 60, 30 degree angles.
     """
     cell_width, cell_height = get_tri_90_60_30_primary_cell(old_img, coords)
-    cell_1, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell, img = copy_primary_cell(old_img, drawable, width, height, cell_width, cell_height)
+    cell_1 = cell.copy(0) 
     cell_1.visible = True
+    img.add_layer(cell_1,0)
     r = 2 * cell_width
     
     # rotate and move cell_1
@@ -777,7 +788,7 @@ register(
     "Turn selection into tiled symmetric image",
     "Eleanor Howick",
     "(c) 2014, Eleanor Howick",
-    "2014-07-05",
+    "2014-07-16",
     "<Image>/Filters/Render/Symmetry Tile",
     "*",
     [
